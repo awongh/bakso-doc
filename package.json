@@ -1,0 +1,25 @@
+{
+  "name": "bakso-pdf",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/awongh/bakso-pdf.git"
+  },
+  "keywords": [],
+  "author": "awongh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/awongh/bakso-pdf/issues"
+  },
+  "homepage": "https://github.com/awongh/bakso-pdf#readme",
+  "dependencies": {
+    "bullmq": "^1.80.0",
+    "cluster": "^0.7.7",
+    "express": "^4.17.3"
+  }
+}
