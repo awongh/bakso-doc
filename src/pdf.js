@@ -1,25 +1,11 @@
 const http = require('http');
 const { DEBUG, HEADFUL, CHROME_BIN, PORT } = process.env;
+const PDF_TIMEOUT = process.env.PDF_TIMEOUT || 100000;
 
 const puppeteer = require('puppeteer');
 const fetch = require('node-fetch');
 
 const truncate = (str, len) => str.length > len ? str.slice(0, len) + '…' : str;
-
-const pageOptions = {
-  viewport : {
-    width:500,
-    height:500
-  },
-  timeout:200000,
-};
-const pdfOptions = {
-  width:'500px',
-  height:'500px',
-  format:null,
-  printBackground:true,
-  path:'test.pdf'
-};
 
 const puppeteerConfig = {
   headless:true,
@@ -70,10 +56,7 @@ async function checkPageHTML(url){
   return res;
 };
 
-//const url = "http://awongh.com";
-const url = "http://info.cern.ch/";
-
-module.exports = async function pdf(){
+module.exports = async function pdf(url, pageOptions, pdfOptions){
 
   let browser, page;
 
@@ -146,13 +129,11 @@ module.exports = async function pdf(){
       }else if (resp && resp._status !== undefined && resp._status !== 200 ){
         responseReject(new Error('Status not 200.'));
       }
-
-
     });
 
     await page.setViewport({
-      width:pageOptions.viewport.width,
-      height:pageOptions.viewport.height,
+      width:pageOptions.width,
+      height:pageOptions.height,
     });
 
     await Promise.race([
@@ -175,8 +156,6 @@ module.exports = async function pdf(){
     });
 
     // wait to render pdf
-    const PDF_TIMEOUT = 100000;
-
     await Promise.race([
       timeoutAndReject(PDF_TIMEOUT, 'PDF timed out'),
       page.pdf(pdfOptions)

@@ -15,13 +15,15 @@ module.exports = async function pdfJob(job, jobDone){
   console.log("DTAA job")
   console.log( job.data );
 
-  const file = await pdf();
+  const { renderUrl, pageOptions, pdfOptions } = job.data;
+
+  const file = await pdf(renderUrl, pageOptions, pdfOptions);
 
   const bucket = "bakso_upload_test";
   const name ="test-"+Math.random;
 
   //const uploadResult = await upload(bucket, name, file);
-  const hookResult = await hook(filePath);
+  //const hookResult = await hook(filePath);
 
   console.log("DONE");
   //console.log(uploadResult);
