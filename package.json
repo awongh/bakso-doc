@@ -2,8 +2,12 @@
   "name": "bakso-pdf",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
+  "engines": {
+    "node": "16.x"
+  },
   "scripts": {
+    "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
