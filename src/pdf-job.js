@@ -1,7 +1,8 @@
 const pdf = require('./pdf.js');
 const upload = require('./upload.js');
+const hook = require('./hook.js');
 
-module.exports = function pdfJob(job, jobDone){
+module.exports = async function pdfJob(job, jobDone){
   // create pdf
 
   // upload it to s3
@@ -20,6 +21,7 @@ module.exports = function pdfJob(job, jobDone){
   const name ="test-"+Math.random;
 
   //const uploadResult = await upload(bucket, name, file);
+  const hookResult = await hook(filePath);
 
   console.log("DONE");
   //console.log(uploadResult);

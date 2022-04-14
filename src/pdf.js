@@ -1,8 +1,8 @@
 const http = require('http');
-const { URL } = require('url');
 const { DEBUG, HEADFUL, CHROME_BIN, PORT } = process.env;
 
 const puppeteer = require('puppeteer');
+const fetch = require('node-fetch');
 
 const truncate = (str, len) => str.length > len ? str.slice(0, len) + '…' : str;
 
@@ -55,25 +55,19 @@ function timeoutAndReject(timeout,message) {
   })
 }
 
-async function checkPageHTML(hostname, port, search, path){
-  return new Promise((resolve, reject) => {
-    const req = http.request({
-      method: 'HEAD',
-      host: hostname,
-      port,
-      search,
-      //searchParams,
-      path,
-    }, ({ statusCode, headers }) => {
-      if (!headers || (statusCode == 200 && !/text\/html/i.test(headers['content-type']))){
-        reject(new Error('Not a HTML page'));
-      } else {
-        resolve();
-      }
-    });
-    req.on('error', reject);
-    req.end();
+async function checkPageHTML(url){
+
+  const res = await fetch(url, {
+    method: 'HEAD'
   });
+
+  // throw if: no headers, bad content type
+  if (!res.headers.raw() || (res.status == 200 && !/text\/html/i.test(res.headers.get('content-type')))){
+
+    throw new Error();
+  }
+
+  return res;
 };
 
 //const url = "http://awongh.com";
@@ -87,10 +81,7 @@ module.exports = async function pdf(){
 
     testUrl(url);
 
-    const { origin, hostname, pathname, searchParams, port, search } = new URL(url);
-    const path = decodeURIComponent(pathname);
-
-    await checkPageHTML(hostname, port, search, path);
+    await checkPageHTML(url);
 
     if (DEBUG) puppeteerConfig.dumpio = true;
 

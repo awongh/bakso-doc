@@ -3,7 +3,7 @@ const AWSSDKClient = require("@aws-sdk/client-s3");
 const { S3Client, PutObjectCommand } = AWSSDKClient;
 
 // Set the AWS Region.
-const REGION = process.env.AWS_REGION }} "us-east-1"; //e.g. "us-east-1"
+const REGION = process.env.AWS_REGION || "us-east-1"; //e.g. "us-east-1"
 
 const client = new S3Client({ region: REGION });
 
