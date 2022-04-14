@@ -20,6 +20,10 @@
   "dependencies": {
     "bullmq": "^1.80.0",
     "cluster": "^0.7.7",
-    "express": "^4.17.3"
+    "express": "^4.17.3",
+    "p-timeout": "^5.0.2",
+    "promise.timeout": "^0.4.2",
+    "pupeteer": "0.0.1",
+    "puppeteer": "^13.5.2"
   }
 }

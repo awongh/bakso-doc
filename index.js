@@ -19,7 +19,7 @@ const workQueue = new Queue(QUEUE_NAME, REDIS_URL);
 app.get('/test', async (req, res) => {
   const job = await workQueue.add(QUEUE_NAME, {foo:"bar"},{ priority: 1});
 
-  console.log(`job id: ${job.id}`; );
+  console.log(`job id: ${job.id}`);
   res.json({ id: job.id });
 });
 
@@ -31,7 +31,6 @@ app.post('/job', async (req, res) => {
   };
 
   const job = await workQueue.add(QUEUE_NAME, params,{ priority: req.body.priority});
-  const job = await workQueue.add(params, { priority: req.body.priority});
 
   res.json({ id: job.id });
 });
