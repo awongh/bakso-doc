@@ -46,7 +46,6 @@ function timeoutAndReject(timeout,message) {
 async function checkPageHTML(url){
 
   const res = await axios(url, {
-    url,
     method: 'HEAD'
   });
 

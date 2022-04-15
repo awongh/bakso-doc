@@ -23,13 +23,12 @@
   "homepage": "https://github.com/awongh/bakso-pdf#readme",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.67.0",
+    "@google-cloud/storage": "^5.19.2",
     "axios": "^0.26.1",
     "bullmq": "^1.80.0",
     "cluster": "^0.7.7",
+    "dotenv": "^16.0.0",
     "express": "^4.17.3",
-    "form-data": "^4.0.0",
-    "node-fetch": "^3.2.3",
-    "promise.timeout": "^0.4.2",
     "puppeteer": "^13.5.2"
   },
   "devDependencies": {

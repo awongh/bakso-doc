@@ -4,32 +4,24 @@ const hook = require('./hook.js');
 
 const crypto = require('crypto');
 
-function generateFileName(data,name){
+function generateFileName(data){
   //const hash = crypto.createHash('md5').update(data).update(name).digest('hex');
-  const hash = crypto.createHash('md5').update(data).update(name).update(new Date()).digest('hex');
-  return `${hash}-${name}.pdf`;
+  const hash = crypto.createHash('md5').update(JSON.stringify(data)).update(new Date()+'').digest('hex');
+  return `${hash}.pdf`;
 }
 
-module.exports = async function pdfJob(job, jobDone){
-  console.log('ffff',job.data)
+module.exports = async function pdfJob(job){
 
-  // see if we need to deal with a file
-  if( job.data.hookUrl ){
-    //pdfOptions.path = `${generateFileName(job.data,name)}`;
-  }
+  const filename = `${generateFileName(job.data)}`;
 
   const file = await pdf(job.data.pdfParams);
-  console.log("DONE %*%*%*%*%*%*%%*%*%*%*%*%*%*%*%%*%*%*%*", file);
 
-  //const bucket = "bakso_upload_test";
-  //const name ="test-"+Math.random;
-  //const uploadResult = await upload(bucket, name, file);
-  //console.log(uploadResult);
+  const uploadResult = await upload(filename, file);
 
-  const hookOptions = {};
-  const hookResult = await hook(file);
+  const hookResult = await hook(uploadResult);
 
   console.log("DONE");
 
   return { maData: true };
 }
+

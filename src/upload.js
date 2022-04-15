@@ -1,36 +1,32 @@
-// Import required AWS SDK clients and commands for Node.js.
-const AWSSDKClient = require("@aws-sdk/client-s3");
-const { S3Client, PutObjectCommand } = AWSSDKClient;
+const {Storage} = require('@google-cloud/storage');
 
-// Set the AWS Region.
-const REGION = process.env.AWS_REGION || "us-east-1"; //e.g. "us-east-1"
+//https://medium.com/@olamilekan001/image-upload-with-google-cloud-storage-and-node-js-a1cf9baa1876
 
-const client = new S3Client({ region: REGION });
+const BUCKET_NAME = process.env.GOOGLE_STORAGE_BUCKET_NAME || 'bakso_test_bucket';
 
-module.exports = async function(bucket, name, data){
-  // Create an object and upload it to the Amazon S3 bucket.
-  try {
+module.exports = async function upload(fileName, data){
+  //https://github.com/googleapis/google-auth-library-nodejs#loading-credentials-from-environment-variables
 
-    // Set the parameters
-    const params = {
-      Bucket: bucket, // The name of the bucket. For example, 'sample_bucket_101'.
-      Key: name, // The name of the object. For example, 'sample_upload.txt'.
-      Body: data, // The content of the object. For example, 'Hello world!".
-    };
+  //https://stackoverflow.com/a/48373699/271932
 
-    const results = await client.send(new PutObjectCommand(params));
+  const storage = new Storage({
+    project_id: process.env.GOOGLE_PROJECT_ID,
+    credentials: JSON.parse(process.env.GOOGLE_JSON_KEY)
+  });
 
-    console.log(
-        "Successfully created " +
-        params.Key +
-        " and uploaded it to " +
-        params.Bucket +
-        "/" +
-        params.Key
-    );
+  const ref = await storage.bucket(BUCKET_NAME).file(fileName);
 
-    return results; // For unit tests.
-  } catch (err) {
-    console.log("Error", err);
-  }
-};
+  ref.save(data);
+
+  const nextYear = new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+
+  const config = {
+    action: 'read',
+    // A timestamp when this link will expire
+    expires: `${nextYear.getFullYear()}-${nextYear.getMonth()+1}-${nextYear.getDate()}`
+    //expires: '2026-12-13',
+  };
+
+  // https://www.geeksforgeeks.org/how-to-get-file-link-from-google-cloud-storage-using-node-js/
+  return await ref.getSignedUrl(config)
+}

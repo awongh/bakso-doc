@@ -1,3 +1,4 @@
+require('dotenv').config()
 const cluster = require('cluster');
 const bullmq = require('bullmq');
 const PdfJob = require('./pdf-job.js');
@@ -33,6 +34,7 @@ if (cluster.isMaster) {
 
   worker.on('error', err => {
     // log the error
+    console.log('worker error');
     console.error(err);
   });
 }

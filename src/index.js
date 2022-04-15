@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express');
 const bullmq = require('bullmq');
 const { Queue, QueueEvents } = bullmq;
@@ -19,8 +20,10 @@ const workQueue = new Queue(QUEUE_NAME, REDIS_URL);
 // Kick off a new job by adding it to the work queue
 app.post('/job', async (req, res) => {
   const job = workQueue.add(QUEUE_NAME, req.body,{ priority: req.body.priority});
+  //const job = workQueue.add(QUEUE_NAME, 'sdfsdfsdf');
 
   res.json({ id: job.id });
+  //res.send('fff');
 });
 
 app.listen(PORT, () => console.log("Server started!"));
