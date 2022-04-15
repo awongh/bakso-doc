@@ -16,40 +16,9 @@ app.use(express.json())
 // Create / Connect to a named work queue
 const workQueue = new Queue(QUEUE_NAME, REDIS_URL);
 
-app.get('/test', async (req, res) => {
-
-  const pageOptions = {
-    width:500,
-    height:500,
-    timeout:200000,
-  };
-
-  const pdfOptions = {
-    width:'500px',
-    height:'500px',
-    format:null,
-    printBackground:true,
-    path:'test.pdf'
-  };
-
-  const url = "http://info.cern.ch/";
-
-  const params = {
-    hookUrl:'test',
-    renderUrl:url,
-    pageOptions,
-    pdfOptions,
-  };
-
-  const job = await workQueue.add(QUEUE_NAME, params,{ priority: 1});
-
-  console.log(`job id: ${job.id}`);
-  res.json({ id: job.id });
-});
-
 // Kick off a new job by adding it to the work queue
 app.post('/job', async (req, res) => {
-  const job = await workQueue.add(QUEUE_NAME, request.body.params,{ priority: req.body.priority});
+  const job = workQueue.add(QUEUE_NAME, req.body,{ priority: req.body.priority});
 
   res.json({ id: job.id });
 });

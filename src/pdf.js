@@ -1,9 +1,11 @@
-const http = require('http');
 const { DEBUG, HEADFUL, CHROME_BIN, PORT } = process.env;
-const PDF_TIMEOUT = process.env.PDF_TIMEOUT || 100000;
+
+// set the default to heroku max ?
+const PDF_TIMEOUT = process.env.PDF_TIMEOUT || 1000000;
+const PAGE_TIMEOUT = process.env.PAGE_TIMEOUT || 1000000;
 
 const puppeteer = require('puppeteer');
-const fetch = require('node-fetch');
+const axios = require('axios').default;
 
 const truncate = (str, len) => str.length > len ? str.slice(0, len) + '…' : str;
 
@@ -43,12 +45,13 @@ function timeoutAndReject(timeout,message) {
 
 async function checkPageHTML(url){
 
-  const res = await fetch(url, {
+  const res = await axios(url, {
+    url,
     method: 'HEAD'
   });
 
   // throw if: no headers, bad content type
-  if (!res.headers.raw() || (res.status == 200 && !/text\/html/i.test(res.headers.get('content-type')))){
+  if (!res.headers || (res.status == 200 && !/text\/html/i.test(res.headers['content-type']))){
 
     throw new Error();
   }
@@ -56,15 +59,16 @@ async function checkPageHTML(url){
   return res;
 };
 
-module.exports = async function pdf(url, pageOptions, pdfOptions){
+module.exports = async function pdf({renderUrl, pageOptions, pdfOptions, name}){
 
   let browser, page;
 
   try{
 
-    testUrl(url);
+    console.log(renderUrl);
+    testUrl(renderUrl);
 
-    await checkPageHTML(url);
+    await checkPageHTML(renderUrl);
 
     if (DEBUG) puppeteerConfig.dumpio = true;
 
@@ -138,9 +142,9 @@ module.exports = async function pdf(url, pageOptions, pdfOptions){
 
     await Promise.race([
       responsePromise,
-      page.goto(url, {
+      page.goto(renderUrl, {
         waitUntil: 'networkidle2',
-        timeout: pageOptions.timeout
+        timeout: PAGE_TIMEOUT
       })
     ]);
 
@@ -156,7 +160,7 @@ module.exports = async function pdf(url, pageOptions, pdfOptions){
     });
 
     // wait to render pdf
-    await Promise.race([
+    const pdf = await Promise.race([
       timeoutAndReject(PDF_TIMEOUT, 'PDF timed out'),
       page.pdf(pdfOptions)
     ]);
