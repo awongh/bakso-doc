@@ -106,3 +106,6 @@ dist
 tmp/
 
 .DS_Store
+
+# generated pdf test file
+test.pdf

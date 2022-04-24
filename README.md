@@ -1,11 +1,11 @@
-# bakso-pdf
+# bakso-doc
 
 ### Start Express
 ```
-nodemon src/index.js
+NO_QUEUE=false node src/index.js
 ```
 
-### Start Worker
+### Start Queue Worker
 ```
 node src/worker.js
 ```
@@ -15,15 +15,22 @@ node src/worker.js
 redis-server /usr/local/etc/redis.conf
 ```
 
-
 ### Queue a Job
+
+The entire body of this request will be passed back to the hook when the job is completed.
+
 ```
-curl -X POST -H "Content-Type: application/json" -d @test/test-params.json http://localhost:5000/job
+curl -X POST -H "Content-Type: application/json" -d @test/11-17-poster-params.json http://localhost:5000/job
 ```
 
-### Test Upload File Hook
+### Test PDF Output without Queue - Save a File using CURL
+```
+curl -X POST -H "Content-Type: application/json" --output test.pdf -d @test/11-17-poster-params.json http://localhost:5000/download
+```
 
-Start the endpoint test server
+### Test Google Cloud Upload File Hook
+
+Start the hook endpoint test server
 ```
 node test/test-hook-endpoint.js
 ```
