@@ -2,8 +2,8 @@
   "hookUrl":"http://localhost:3000/hello",
   "priority":1,
   "pdfParams":{
-    "name":"john",
-    "renderUrl":"http://localhost:3000/documents/poster_render?day=23&month=3&year=1987&place_id=ChIJIQBpAG2ahYAR_6128GcTUEo&formatted_place=San+Francisco%2C+CA%2C+USA&formatted_date=2022-Jan-13+at+12%3A00am&latitude=37.7749295&longitude=-122.4194155&minute=0&hour=0&dont_know_time=false&size=11x17",
+    "name":"myfile",
+    "renderUrl":"https://example.com/?printparam1=lorem&printparam2=ipsum",
     "pageOptions":{
       "width":50,
       "height":50
