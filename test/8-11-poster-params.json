@@ -3,7 +3,7 @@
   "priority":1,
   "pdfParams":{
     "name":"myfile",
-    "renderUrl":"https://example.com/?printparam1=lorem&printparam2=ipsum",
+    "renderUrl":"https://example.com/?param1=lorem&param2=ipsum",
     "pageOptions":{
       "width":50,
       "height":50
