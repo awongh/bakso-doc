@@ -17,13 +17,19 @@ const puppeteerConfig = {
     '--disable-setuid-sandbox',
     '--enable-features=NetworkService',
     '-—disable-dev-tools',
-
     '--headless',
     '--disable-gpu',
     '--full-memory-crash-report',
     '--unlimited-storage',
     '--disable-setuid-sandbox',
-    '--disable-dev-shm-usage'
+    '--disable-dev-shm-usage',
+
+    // from: https://stackoverflow.com/a/66994528/271932
+    '--no-first-run',
+    '--no-zygote',
+    '--deterministic-fetch',
+    '--disable-features=IsolateOrigins',
+    '--disable-site-isolation-trials',
 
   ],
   devtools: false,
@@ -173,9 +179,11 @@ module.exports = async function pdf({renderUrl, pageOptions, pdfOptions, name}){
     return pdf;
 
   } catch (e) {
+    console.error(e)
+
     if (!DEBUG && page) {
-      page.removeAllListeners();
-      page.close();
+      await page.removeAllListeners();
+      await page.close();
     }
     const { message = '' } = e;
 
@@ -183,7 +191,7 @@ module.exports = async function pdf({renderUrl, pageOptions, pdfOptions, name}){
     if (/not opened/i.test(message) && browser){
       console.error('🕸 Web socket failed');
       try {
-        browser.close();
+        await browser.close();
         browser = null;
       } catch (err) {
         console.warn(`Chrome could not be killed ${err.message}`);
@@ -193,9 +201,10 @@ module.exports = async function pdf({renderUrl, pageOptions, pdfOptions, name}){
 
     if (browser){
       await browser.close();
+      browser = null;
     }
 
-    console.error(e)
-    return Promise.reject();
+    // give up and throw up to retry
+    throw e;
   }
 };
