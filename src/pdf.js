@@ -131,7 +131,7 @@ module.exports = async function pdf({renderUrl, pageOptions, pdfOptions, name}){
     page.on('response', (resp) => {
 
       let headers = resp._headers;
-      if (headers && headers['location'] !== undefined && headers['location'].includes(hostname)){
+      if (headers && headers['location'] !== undefined && headers['location'].includes(url.hostname)){
 
           responseReject(new Error('Possible infinite redirects detected.'));
 
