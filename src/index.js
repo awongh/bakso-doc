@@ -21,9 +21,13 @@ app.use(express.json())
  */
 
 function isKeyValid(key){
-  var hash = crypto.createHash('sha512');
-  data = hash.update(KEY, 'utf-8');
-  return data.digest('hex') === key;
+  const hashA = crypto.createHash('sha512');
+  const dataA = hash.update(key, 'utf-8');
+
+  const hashB = crypto.createHash('sha512');
+  const dataB = hash.update(KEY, 'utf-8');
+
+  return dataA.digest('hex') === dataB.digest('hex');
 }
 
 app.post('/download', async (req, res) => {
