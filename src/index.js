@@ -22,10 +22,10 @@ app.use(express.json())
 
 function isKeyValid(key){
   const hashA = crypto.createHash('sha512');
-  const dataA = hash.update(key, 'utf-8');
+  const dataA = hashA.update(key, 'utf-8');
 
   const hashB = crypto.createHash('sha512');
-  const dataB = hash.update(KEY, 'utf-8');
+  const dataB = hashB.update(KEY, 'utf-8');
 
   return dataA.digest('hex') === dataB.digest('hex');
 }
