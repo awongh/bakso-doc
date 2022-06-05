@@ -132,9 +132,10 @@ module.exports = async function pdf({renderUrl, pageOptions, pdfOptions, name}){
 
       let headers = resp._headers;
       const renderTestUrl = new URL(renderUrl);
-      if (headers && headers['location'] !== undefined && headers['location'].includes(renderTestUrl.hostname)){
+      if (resp && resp._status !== undefined && ( resp._status === 201 || resp._status === 301 || resp._status === 302 || resp._status === 303 || resp._status === 307 || resp._status === 308 ) && headers && headers['location'] !== undefined && headers['location'].includes(renderTestUrl.hostname)){
 
-          responseReject(new Error(`Possible infinite redirects detected: ${headers['location']}`));
+          responseReject(new Error(`Possible infinite redirects detected: ${headers['location']} ${resp._status}`));
+          //console.log(`Possible infinite redirects detected: ${headers['location']}`);
 
       }else if (resp && resp._status !== undefined && resp._status !== 200 ){
         responseReject(new Error('Status not 200.'));
