@@ -20,21 +20,11 @@ app.use(express.json())
  * ========================================================
  */
 
-function isKeyValid(key){
-  const hashA = crypto.createHash('sha512');
-  const dataA = hashA.update(key, 'utf-8');
-
-  const hashB = crypto.createHash('sha512');
-  const dataB = hashB.update(KEY, 'utf-8');
-
-  return dataA.digest('hex') === dataB.digest('hex');
-}
-
 app.post('/download', async (req, res) => {
   try{
 
     // exit out if key doesn't match
-    if(isKeyValid(req.body.key) === false) throw new Error;
+    if(req.body.key !== KEY) throw new Error;
 
     const file = await retry(
       async (bail, count) => {
