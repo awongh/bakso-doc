@@ -22,6 +22,8 @@
   },
   "homepage": "https://github.com/awongh/bakso-doc#readme",
   "dependencies": {
+    "@sentry/node": "^7.1.1",
+    "@sentry/tracing": "^7.1.1",
     "async-retry": "^1.3.3",
     "axios": "^0.26.1",
     "dotenv": "^16.0.0",

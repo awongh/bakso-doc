@@ -2,8 +2,16 @@ require('dotenv').config()
 const retry = require('async-retry');
 const express = require('express');
 const crypto = require('crypto');
+const Sentry = require("@sentry/node");
+const Tracing = require("@sentry/tracing");
 const pdf = require('./pdf.js');
 
+const sentryDSN = process.env.SENTRY_DSN || null;
+
+Sentry.init({
+  dsn: sentryDSN,
+  tracesSampleRate: 1.0,
+});
 
 // Serve on PORT on Heroku and on localhost:5000 locally
 const PORT = process.env.PORT || '5500';
@@ -39,6 +47,10 @@ app.post('/download', async (req, res) => {
     res.send(file);
 
   }catch(e){
+
+    if( sentryDSN !== null ){
+      Sentry.captureException(e);
+    }
     console.error(e);
     res.sendStatus(500);
   }
